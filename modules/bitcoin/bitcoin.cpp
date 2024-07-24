@@ -218,6 +218,7 @@ void BitcoinWallet::_bind_methods() {
     ClassDB::bind_method(D_METHOD("mnemonic_to_entropy", "mnemonic"), &BitcoinWallet::mnemonic_to_entropy);
     ClassDB::bind_method(D_METHOD("fast_create"), &BitcoinWallet::fast_create);
     ClassDB::bind_method(D_METHOD("is_valid_bip39_word", "word"), &BitcoinWallet::is_valid_mnemonic);
+    ClassDB::bind_method(D_METHOD("generate_sidechain_starters", "master_seed_hex", "master_mnemonic", "sidechain_slots"), &BitcoinWallet::generate_sidechain_starters);
 }
 
 PackedByteArray BitcoinWallet::sha512_hash(const PackedByteArray &p_data) {
@@ -545,6 +546,44 @@ PackedByteArray BitcoinWallet::mnemonic_to_entropy(const String& mnemonic) {
 String BitcoinWallet::fast_create() {
     PackedByteArray bytes = generate_random_bytes(64);
     return bytes_to_hex(bytes);
+}
+
+PackedByteArray BitcoinWallet::derive_child_key(const PackedByteArray &parent_key, int index) {
+
+    uint32_t hardened_index = 0x80000000 | index;
+    
+    PackedByteArray index_bytes;
+    index_bytes.resize(4);
+    index_bytes.write[0] = (hardened_index >> 24) & 0xFF;
+    index_bytes.write[1] = (hardened_index >> 16) & 0xFF;
+    index_bytes.write[2] = (hardened_index >> 8) & 0xFF;
+    index_bytes.write[3] = hardened_index & 0xFF;
+
+    PackedByteArray data = parent_key;
+    data.append_array(index_bytes);
+
+    return hmac_sha512(String("Bitcoin seed").to_utf8_buffer(), data);
+}
+
+Dictionary BitcoinWallet::generate_sidechain_starters(const String &master_seed_hex, const String &master_mnemonic, const Array &sidechain_slots) {
+    Dictionary result;
+    PackedByteArray master_seed = hex_to_bytes(master_seed_hex);
+    for (int i = 0; i < sidechain_slots.size(); i++) {
+        int slot = sidechain_slots[i];
+        PackedByteArray child_seed = derive_child_key(master_seed, slot);
+        String child_seed_hex = bytes_to_hex(child_seed);
+        String child_seed_binary = bytes_to_binary(child_seed);
+        String child_mnemonic = entropy_to_mnemonic(child_seed.slice(0, 16)); // Use first 16 bytes as entropy
+
+        Dictionary sidechain_info;
+        sidechain_info["seed_hex"] = child_seed_hex;
+        sidechain_info["seed_binary"] = child_seed_binary;
+        sidechain_info["mnemonic"] = child_mnemonic;
+        sidechain_info["derivation_path"] = "m/44'/0'/" + String::num_int64(slot) + "'";
+
+        result["sidechain_" + String::num_int64(slot)] = sidechain_info;
+    }
+    return result;
 }
 
 BitcoinWallet::BitcoinWallet() {
