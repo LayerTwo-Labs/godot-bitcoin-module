@@ -1,0 +1,33 @@
+Godot Engine v4.2.2.stable.custom_build - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+OpenGL debugging not supported!
+Shader 'CanvasSdfShaderGLES3' SHA256: e1b4b7573af1846e6fffd6f46888a401d998fe42b57077804f740ec99aceda24
+Shader 'SkeletonShaderGLES3' SHA256: 580e1a8ef14be4dd17588697a3f59398a63e1f447a0de5e34a6125cd16466eaa
+Shader 'ParticlesShaderGLES3' SHA256: 25453bcd7994993df786f2c3c8e4f545780091124c99be6bbed003cb416ed47b
+Shader 'ParticlesCopyShaderGLES3' SHA256: e8a5966c6365d91002c00509bec1c12ce87cfda90c2538441ccd6d7c2a78521c
+Shader 'CopyShaderGLES3' SHA256: 801774426a01de24c1a19520de87e7a5e839f1906442f607d56b8e43deac1ca9
+Shader 'CanvasShaderGLES3' SHA256: 1aa87fd800773fd8906c1f3c33ca2478ced82dc41b0f1eeb2c17a95b476b65f4
+Shader 'CanvasOcclusionShaderGLES3' SHA256: 179f723384b65c21faa4ba0f65671a3096e5c45462ac5df0517016f77aaa2d5f
+Shader 'SceneShaderGLES3' SHA256: baf9359a9dc605f2d28cd4de7a95c2b9a0596c7de207c38028ada9bf47cae0e4
+Shader 'SkyShaderGLES3' SHA256: beb37fd7e48932c7cd631d771cac87497302a45bd570d26723fb576d7272e371
+Shader 'CubemapFilterShaderGLES3' SHA256: a266797255bf4280fa2df556a3ed1c24c510a92f95d3ce3eb7682bc2992be0f7
+OpenGL API 4.1 Metal - 88 - Compatibility - Using Device: Apple - Apple M3 Pro
+CoreAudio: detected 2 channels
+CoreAudio: audio buffer frames: 512 calculated latency: 11ms
+ 
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+2024-06-24 17:29:17.031 godot.macos.editor.arm64[11998:11848869] WARNING: AVCaptureDeviceTypeExternal is deprecated for Continuity Cameras. Please use AVCaptureDeviceTypeContinuityCamera and add NSCameraUseContinuityCameraDeviceType to your Info.plist.
+CameraServer: Registered camera FaceTime HD Camera with ID 1 and position 0 at index 0
+CameraServer: Registered camera Marc’s iPhone (3) Camera with ID 2 and position 0 at index 1
+CORE API HASH: 2995524600
+EDITOR API HASH: 3767149329
+EditorSettings: Load OK!
+Project is missing: /Users/marcplatt/Desktop/project.godot
+Loaded system CA certificates
+EditorSettings: Save OK!
+EditorSettings: Save OK!
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
