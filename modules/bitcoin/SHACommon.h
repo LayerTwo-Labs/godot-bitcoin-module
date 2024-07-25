@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 
+
 // Padded message structure, contains message length + message 
 typedef struct PaddedMsg {
     size_t length;
