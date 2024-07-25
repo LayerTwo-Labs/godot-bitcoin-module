@@ -9,8 +9,4 @@ env_bitcoin.add_source_files(module_obj, "*.cpp")
 env_bitcoin.add_source_files(env_bitcoin.modules_sources, "sha256.c")
 env_bitcoin.add_source_files(env_bitcoin.modules_sources, "sha512.c")
 
-module_sources = Glob('modules/bitcoin/*.cpp')
-
-env_bitcoin.add_source_files(env.modules_sources, module_sources)
-
 env_bitcoin.modules_sources += module_obj

@@ -16,6 +16,10 @@
 #define HASH_ARRAY_LEN 8
 #define MAX_VAL 0xFFFFFFFFFFFFFFFFLLU
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// Preprocesses the given message of len bytes
 PaddedMsg preprocess(uint8_t *msg, size_t len);
 
@@ -24,5 +28,9 @@ uint64_t *getHash(PaddedMsg *p);
 
 /// Wrapper for hashing methods, up to caller to free the return value
 uint64_t *SHA512Hash(uint8_t *input, size_t len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //__SHA512_H_
