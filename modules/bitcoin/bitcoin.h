@@ -5,7 +5,7 @@
 #include "core/string/ustring.h"
 #include "core/variant/dictionary.h"
 #include "core/templates/hash_map.h"
-#include "sha512.h"
+#include "SHA512.h"
 #include "sha256.h"
 #include <random>
 

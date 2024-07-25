@@ -222,11 +222,11 @@ void BitcoinWallet::_bind_methods() {
 }
 
 PackedByteArray BitcoinWallet::sha512_hash(const PackedByteArray &p_data) {
-    CSHA512 sha512;
+    uint64_t *hash_result = SHA512Hash(const_cast<uint8_t*>(p_data.ptr()), p_data.size());
     PackedByteArray result;
-    result.resize(CSHA512::OUTPUT_SIZE);
-    sha512.Write(p_data.ptr(), p_data.size());
-    sha512.Finalize(result.ptrw());
+    result.resize(SHA512_HASH_SIZE);
+    memcpy(result.ptrw(), hash_result, SHA512_HASH_SIZE);
+    free(hash_result);
     return result;
 }
 
@@ -269,7 +269,7 @@ int BitcoinWallet::binary_to_int(const String &binary) {
 }
 
 PackedByteArray BitcoinWallet::hmac_sha512(const PackedByteArray &key, const PackedByteArray &data) {
-    const int BLOCK_SIZE = 128; // SHA-512 block size in bytes
+    const int BLOCK_SIZE = SHA512_MESSAGE_BLOCK_SIZE;
 
     PackedByteArray o_key_pad;
     PackedByteArray i_key_pad;

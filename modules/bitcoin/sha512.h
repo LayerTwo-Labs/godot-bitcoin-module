@@ -1,28 +1,27 @@
-// Copyright (c) 2014-2016 The Bitcoin Core developers
-// Distributed under the MIT software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// SHA 512 Implementation by Timothy Vaccarelli
+// Based on the hashing algorithm details from http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf
+// and http://www.iwar.org.uk/comsec/resources/cipher/sha256-384-512.pdf
 
-#ifndef BITCOIN_CRYPTO_SHA512_H
-#define BITCOIN_CRYPTO_SHA512_H
+#ifndef __SHA512_H_
+#define __SHA512_H_
 
+#include <inttypes.h>
 #include <stdint.h>
-#include <stdlib.h>
 
-/** A hasher class for SHA-512. */
-class CSHA512
-{
-private:
-    uint64_t s[8];
-    unsigned char buf[128];
-    uint64_t bytes;
+#include "SHACommon.h"
 
-public:
-    static const size_t OUTPUT_SIZE = 64;
+#define SHA512_MESSAGE_BLOCK_SIZE 128
+#define SHA512_HASH_SIZE 64
+#define HASH_ARRAY_LEN 8
+#define MAX_VAL 0xFFFFFFFFFFFFFFFFLLU
 
-    CSHA512();
-    CSHA512& Write(const unsigned char* data, size_t len);
-    void Finalize(unsigned char hash[OUTPUT_SIZE]);
-    CSHA512& Reset();
-};
+/// Preprocesses the given message of len bytes
+PaddedMsg preprocess(uint8_t *msg, size_t len);
 
-#endif // BITCOIN_CRYPTO_SHA512_H
+/// Returns the sha-512 hash corresponding to the padded message: Return value must be free()'d
+uint64_t *getHash(PaddedMsg *p);
+
+/// Wrapper for hashing methods, up to caller to free the return value
+uint64_t *SHA512Hash(uint8_t *input, size_t len);
+
+#endif //__SHA512_H_
