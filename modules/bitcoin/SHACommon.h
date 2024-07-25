@@ -1,3 +1,7 @@
+// SHA Common Implementation by Timothy Vaccarelli
+// Based on the hashing algorithm details from http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf
+// and http://www.iwar.org.uk/comsec/resources/cipher/sha256-384-512.pdf
+
 #ifndef __SHA_COMMON_H
 #define __SHA_COMMON_H
 
@@ -33,17 +37,11 @@ static inline void endianSwap64(uint64_t *x)
     }
 }
 
-// Swaps the byte order of the 128 bit unsigned integer x
-static inline void endianSwap128(__uint128_t *x)
+// Swaps the byte order of two 64-bit unsigned integers representing a 128-bit value
+static inline void endianSwap128_64(uint64_t *high, uint64_t *low)
 {
-    char *y = (char*)x;
-    for (size_t low = 0, high = sizeof(__uint128_t) - 1; high > low; ++low, --high)
-    {
-        y[low]  ^= y[high];
-        y[high] ^= y[low];
-        y[low]  ^= y[high];
-    }
+    endianSwap64(high);
+    endianSwap64(low);
 }
 
 #endif //__SHA_COMMON_H
-

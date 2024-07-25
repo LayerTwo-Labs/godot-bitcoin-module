@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "SHA512.h"
+#include "sha512.h"
 
 // K: first 64 bits of the fractional parts of the cube roots of the first 80 primes
 const static uint64_t K[80] =
@@ -53,15 +53,11 @@ uint64_t *W(int N, uint64_t *M)
     uint64_t *w = (uint64_t*) malloc(sizeof(uint64_t) * 80);
     uint64_t *mPtr = &M[(N * 16)];
     
-    //printf("Message block %d : ", N);
     for (int i = 0; i < 16; ++i)
     {
         w[i] = *mPtr;
         ++mPtr;
-        
-    //printf("%" PRIx64 , w[i]);
     }
-    //printf("\n");
     for (int i = 16; i < 80; ++i)
     {
         w[i] = SmallSigma1(w[i - 2]) + w[i - 7] + SmallSigma0(w[i - 15]) + w[i - 16];
@@ -74,13 +70,11 @@ uint64_t *W(int N, uint64_t *M)
 // Appends "1" to end of msg, then k 0 bits such that l + 1 + k = 896 mod 1024
 // and k is the smallest nonnegative solution to said equation. To this is appended
 // the 128 bit block equal to the bit length l.
-//char *preprocess(char *msg)
 PaddedMsg preprocess(uint8_t *msg, size_t len)
 {    
     PaddedMsg padded;
     
     // resulting msg wll be multiple of 1024 bits
-    //size_t len = strlen(msg);
     if (msg == NULL || len == 0)
     {
         padded.length = 0;
@@ -90,12 +84,8 @@ PaddedMsg preprocess(uint8_t *msg, size_t len)
     
     size_t l = len * 8;
     size_t k = (896 - ( (l  + 1) % 1024 )) % 1024;
-    //printf("k = %zu\n", k);
-    //printf("l = %zu\n", l);
-    //printf("l + k + 1 = %zu bits, %zu bytes\n", (l+k+1), ((l+k+1)/8));
     
     padded.length = ((l + k + 1) / 8) + 16;
-    //printf("padded.length = %zu\n", padded.length);
     padded.msg = (uint8_t*) malloc(sizeof(uint8_t) * padded.length);
     memset(&padded.msg[0], 0, padded.length);
     for (size_t i = 0; i < len; ++i)
@@ -104,9 +94,11 @@ PaddedMsg preprocess(uint8_t *msg, size_t len)
     padded.msg[len] = 0x80;
     
     // last 16 bytes reserved for length
-    __uint128_t bigL = l;
-    endianSwap128(&bigL);
-    memcpy(&padded.msg[padded.length - sizeof(__uint128_t)], &bigL, sizeof(__uint128_t));
+    uint64_t bigL_high = 0;
+    uint64_t bigL_low = l;
+    endianSwap128_64(&bigL_high, &bigL_low);
+    memcpy(&padded.msg[padded.length - 16], &bigL_high, 8);
+    memcpy(&padded.msg[padded.length - 8], &bigL_low, 8);
     
     return padded;
 }
@@ -118,7 +110,6 @@ PaddedMsg preprocess(uint8_t *msg, size_t len)
 uint64_t *getHash(PaddedMsg *p)
 {
     size_t N = p->length / SHA512_MESSAGE_BLOCK_SIZE;
-    //printf("Number of blocks = %zu\n", N);
     
     // initial hash value
     uint64_t h[8] = {
@@ -139,15 +130,15 @@ uint64_t *getHash(PaddedMsg *p)
         endianSwap64(msg++);
 #endif
 
-    for (size_t i = 0; i < N; ++i)
+    for (size_t block = 0; block < N; ++block)
     {
         uint64_t T1, T2;
         // initialize registers
         uint64_t reg[HASH_ARRAY_LEN];
-        for (int i = 0; i < HASH_ARRAY_LEN; ++i)
-            reg[i] = h[i];
+        for (int r = 0; r < HASH_ARRAY_LEN; ++r)
+            reg[r] = h[r];
         
-        uint64_t *w = W(i, ((uint64_t*)(p->msg)));
+        uint64_t *w = W(block, ((uint64_t*)(p->msg)));
         
         // Apply the SHA512 compression function to update registers
         for (int j = 0; j < 80; ++j)
@@ -166,8 +157,8 @@ uint64_t *getHash(PaddedMsg *p)
         }
         
         // Compute the ith intermediate hash values 
-        for (int i = 0; i < HASH_ARRAY_LEN; ++i)
-            h[i] += reg[i];
+        for (int r = 0; r < HASH_ARRAY_LEN; ++r)
+            h[r] += reg[r];
         
         free(w);
     }
