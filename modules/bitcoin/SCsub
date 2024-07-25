@@ -6,7 +6,6 @@ env_bitcoin = env.Clone()
 module_obj = []
 
 env_bitcoin.add_source_files(module_obj, "*.cpp")
-env_bitcoin.add_source_files(env_bitcoin.modules_sources, "sha256.c")
-env_bitcoin.add_source_files(env_bitcoin.modules_sources, "sha512.c")
+env_bitcoin.add_source_files(module_obj, "*.c") 
 
 env_bitcoin.modules_sources += module_obj

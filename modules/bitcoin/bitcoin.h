@@ -6,10 +6,16 @@
 #include "core/variant/dictionary.h"
 #include "core/templates/hash_map.h"
 
+#ifdef __cplusplus
 extern "C" {
+#endif
+
 #include "sha512.h"
 #include "sha256.h"
+
+#ifdef __cplusplus
 }
+#endif
 
 #include <random>
 
@@ -20,7 +26,7 @@ protected:
     static void _bind_methods();
 
 private:
-    PackedByteArray sha512_hash(const PackedByteArray &p_data);
+    PackedByteArray sha512(const PackedByteArray &p_data);
     PackedByteArray sha256(const PackedByteArray &data);
     String bytes_to_binary(const PackedByteArray &bytes);
     String bytes_to_hex(const PackedByteArray &bytes);

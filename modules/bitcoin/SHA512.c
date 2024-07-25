@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // SHA 512 Implementation by Timothy Vaccarelli
 // Based on the hashing algorithm details from http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf
 // and http://www.iwar.org.uk/comsec/resources/cipher/sha256-384-512.pdf
@@ -176,3 +180,7 @@ uint64_t *SHA512Hash(uint8_t *input, size_t len)
     PaddedMsg paddedMsg = preprocess(input, len);
     return getHash(&paddedMsg);
 }
+
+#ifdef __cplusplus
+}
+#endif

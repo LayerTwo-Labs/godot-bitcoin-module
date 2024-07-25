@@ -221,7 +221,7 @@ void BitcoinWallet::_bind_methods() {
     ClassDB::bind_method(D_METHOD("generate_sidechain_starters", "master_seed_hex", "master_mnemonic", "sidechain_slots"), &BitcoinWallet::generate_sidechain_starters);
 }
 
-PackedByteArray BitcoinWallet::sha512_hash(const PackedByteArray &p_data) {
+PackedByteArray BitcoinWallet::sha512(const PackedByteArray &p_data) {
     uint64_t *hash_result = SHA512Hash(const_cast<uint8_t*>(p_data.ptr()), p_data.size());
     PackedByteArray result;
     result.resize(SHA512_HASH_SIZE);
@@ -278,7 +278,7 @@ PackedByteArray BitcoinWallet::hmac_sha512(const PackedByteArray &key, const Pac
 
     PackedByteArray working_key = key;
     if (working_key.size() > BLOCK_SIZE) {
-        working_key = sha512_hash(working_key);
+        working_key = sha512(working_key);
     }
 
     working_key.resize(BLOCK_SIZE);
@@ -290,11 +290,11 @@ PackedByteArray BitcoinWallet::hmac_sha512(const PackedByteArray &key, const Pac
 
     PackedByteArray inner_data = i_key_pad;
     inner_data.append_array(data);
-    PackedByteArray inner_hash = sha512_hash(inner_data);
+    PackedByteArray inner_hash = sha512(inner_data);
 
     PackedByteArray outer_data = o_key_pad;
     outer_data.append_array(inner_hash);
-    return sha512_hash(outer_data);
+    return sha512(outer_data);
 }
 
 PackedByteArray BitcoinWallet::pbkdf2_hmac_sha512(const String& password, const PackedByteArray& salt, int iterations, int key_length) {
