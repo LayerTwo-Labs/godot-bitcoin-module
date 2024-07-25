@@ -412,7 +412,6 @@ Dictionary BitcoinWallet::generate_wallet(const String &input_string, const Stri
 
     Vector<String> words = input_string.split(" ");
     if (words.size() == 12) {
-        // It's a mnemonic
         String mnemonic = input_string;
         PackedByteArray entropy = mnemonic_to_entropy(mnemonic);
         if (entropy.is_empty()) {
@@ -420,7 +419,6 @@ Dictionary BitcoinWallet::generate_wallet(const String &input_string, const Stri
             return result;
         }
         
-        // Now proceed with the entropy
         String entropy_hex = bytes_to_hex(entropy);
         result["bip39_hex"] = entropy_hex;
         result["bip39_bin"] = bytes_to_binary(entropy);
@@ -435,7 +433,7 @@ Dictionary BitcoinWallet::generate_wallet(const String &input_string, const Stri
         result["hd_key_data"] = bytes_to_hex(hash);
         result["mnemonic"] = mnemonic;
     } else {
-        // Treat as entropy input
+
         PackedByteArray input_bytes = input_string.to_utf8_buffer();
         PackedByteArray full_hash = sha256(input_bytes);
         PackedByteArray entropy = full_hash.slice(0, 16);

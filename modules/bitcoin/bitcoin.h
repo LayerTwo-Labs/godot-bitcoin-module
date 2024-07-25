@@ -5,8 +5,12 @@
 #include "core/string/ustring.h"
 #include "core/variant/dictionary.h"
 #include "core/templates/hash_map.h"
+
+extern "C" {
 #include "SHA512.h"
 #include "sha256.h"
+}
+
 #include <random>
 
 class BitcoinWallet : public RefCounted {
