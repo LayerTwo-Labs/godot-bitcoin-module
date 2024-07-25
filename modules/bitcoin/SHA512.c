@@ -8,7 +8,7 @@
 #include "sha512.h"
 
 // K: first 64 bits of the fractional parts of the cube roots of the first 80 primes
-const static uint64_t K[80] =
+static const uint64_t K[80] =
 {
     0x428A2F98D728AE22, 0x7137449123EF65CD, 0xB5C0FBCFEC4D3B2F, 0xE9B5DBA58189DBBC,
     0x3956C25BF348B538, 0x59F111F1B605D019, 0x923F82A4AF194F9B, 0xAB1C5ED5DA6D8118,
@@ -126,7 +126,7 @@ uint64_t *getHash(PaddedMsg *p)
 #if MACHINE_BYTE_ORDER == LITTLE_ENDIAN
     // Convert byte order of message to big endian
     uint64_t *msg = ((uint64_t*)&p->msg[0]);
-    for (int i = 0; i < N * 16; ++i)
+    for (size_t i = 0; i < N * 16; ++i)  
         endianSwap64(msg++);
 #endif
 
