@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="BitcoinWallet" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="derive_seed">
+			<return type="PackedByteArray" />
+			<param index="0" name="mnemonic" type="String" />
+			<param index="1" name="passphrase" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="entropy_to_mnemonic">
+			<return type="String" />
+			<param index="0" name="entropy" type="PackedByteArray" />
+			<description>
+			</description>
+		</method>
+		<method name="fast_create">
+			<return type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="generate_sidechain_starters">
+			<return type="Dictionary" />
+			<param index="0" name="master_seed_hex" type="String" />
+			<param index="1" name="master_mnemonic" type="String" />
+			<param index="2" name="sidechain_slots" type="Array" />
+			<description>
+			</description>
+		</method>
+		<method name="generate_wallet">
+			<return type="Dictionary" />
+			<param index="0" name="input_string" type="String" />
+			<param index="1" name="passphrase" type="String" default="&quot;&quot;" />
+			<description>
+			</description>
+		</method>
+		<method name="is_valid_bip39_word">
+			<return type="bool" />
+			<param index="0" name="word" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="mnemonic_to_entropy">
+			<return type="PackedByteArray" />
+			<param index="0" name="mnemonic" type="String" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>
