@@ -77,6 +77,14 @@ jobs:
             tests: false
             artifact: true
 
+          - name: Template w/ Mono (target=template_debug)
+            cache-name: linux-template-debug-mono
+            target: template_debug
+            sconsflags: module_mono_enabled=yes
+            build-mono: false
+            tests: false
+            artifact: true
+
           - name: Minimal template (target=template_release, everything disabled)
             cache-name: linux-template-minimal
             target: template_release

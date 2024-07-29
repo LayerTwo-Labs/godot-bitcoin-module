@@ -63,3 +63,43 @@ jobs:
     # appropriately.
     needs: linux-build
     uses: ./.github/workflows/godot_cpp_test.yml
+
+  release:
+    name: Release
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [linux-build, macos-build, windows-build]
+    runs-on: "ubuntu-latest"
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      # FIXME: remove
+      - name: list files
+        run: |
+          ls linux-editor-mono
+          ls macos-editor
+
+      - name: Prepare release files
+        run: |
+          zip -r GodotSharp.zip linux-editor-mono/GodotSharp
+
+      - name: Upload release files
+        uses: softprops/action-gh-release@v2.0.8
+        with:
+          fail_on_unmatched_files: true
+          files: |
+            GodotSharp.zip
+            linux-editor-mono/godot.linuxbsd.editor.x86_64.mono
+            linux-template-minimal/godot.linuxbsd.template_release.x86_64
+            linux-template-debug-mono/godot.linuxbsd.template_debug.x86_64.mono
+            linux-template-mono/godot.linuxbsd.template_release.x86_64.mono
+            macos-editor/godot.macos.editor.universal
+            macos-template/godot.macos.template_release.universal
+            macos-template-debug/godot.macos.template_debug.universal
+            windows-editor/godot.windows.editor.x86_64.exe
+            windows-template/godot.windows.template_release.x86_64.exe
+            windows-template/godot.windows.template_release.x86_64.console.exe
+            windows-template-debug/godot.windows.template_debug.x86_64.exe
+            windows-template-debug/godot.windows.template_debug.x86_64.console.exe

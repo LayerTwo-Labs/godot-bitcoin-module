@@ -36,6 +36,14 @@ jobs:
             target: template_release
             tests: false
             sconsflags: debug_symbols=no
+            bin: "./bin/godot.windows.template_release.x86_64.console.exe"
+
+          - name: Template (target=template_debug)
+            cache-name: windows-template-debug
+            target: template_debug
+            tests: false
+            sconsflags: debug_symbols=yes
+            bin: "./bin/godot.windows.template_debug.x86_64.console.exe"
 
     steps:
       - uses: actions/checkout@v4
