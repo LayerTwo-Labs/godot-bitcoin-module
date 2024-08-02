@@ -438,7 +438,8 @@ Dictionary BitcoinWallet::generate_wallet(const String &input_string, const Stri
         PackedByteArray full_hash = sha256(input_bytes);
         PackedByteArray entropy = full_hash.slice(0, 16);
 
-        result["bip39_hex"] = full_hash;
+        String entropy_hex = bytes_to_hex(full_hash);
+        result["bip39_hex"] = entropy_hex;
         result["bip39_bin"] = bytes_to_binary(entropy);
 
         PackedByteArray hash = sha256(entropy);
