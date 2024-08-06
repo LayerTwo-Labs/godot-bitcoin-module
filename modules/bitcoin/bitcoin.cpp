@@ -566,12 +566,27 @@ PackedByteArray BitcoinWallet::derive_child_key(const PackedByteArray &parent_ke
 Dictionary BitcoinWallet::generate_sidechain_starters(const String &master_seed_hex, const String &master_mnemonic, const Array &sidechain_slots) {
     Dictionary result;
     PackedByteArray master_seed = hex_to_bytes(master_seed_hex);
+
+    int mainchain_slot = 999;
+    PackedByteArray mainchain_seed = derive_child_key(master_seed, mainchain_slot);
+    String mainchain_seed_hex = bytes_to_hex(mainchain_seed);
+    String mainchain_seed_binary = bytes_to_binary(mainchain_seed);
+    String mainchain_mnemonic = entropy_to_mnemonic(mainchain_seed.slice(0, 16));
+
+    Dictionary mainchain_info;
+    mainchain_info["seed_hex"] = mainchain_seed_hex;
+    mainchain_info["seed_binary"] = mainchain_seed_binary;
+    mainchain_info["mnemonic"] = mainchain_mnemonic;
+    mainchain_info["derivation_path"] = "m/44'/0'/999'";
+
+    result["mainchain"] = mainchain_info;
+
     for (int i = 0; i < sidechain_slots.size(); i++) {
         int slot = sidechain_slots[i];
         PackedByteArray child_seed = derive_child_key(master_seed, slot);
         String child_seed_hex = bytes_to_hex(child_seed);
         String child_seed_binary = bytes_to_binary(child_seed);
-        String child_mnemonic = entropy_to_mnemonic(child_seed.slice(0, 16)); // Use first 16 bytes as entropy
+        String child_mnemonic = entropy_to_mnemonic(child_seed.slice(0, 16)); 
 
         Dictionary sidechain_info;
         sidechain_info["seed_hex"] = child_seed_hex;
